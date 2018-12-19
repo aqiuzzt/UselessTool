@@ -3,8 +3,8 @@ package com.yy.plugin
 import com.android.build.gradle.AppExtension
 import com.android.build.gradle.AppPlugin
 import com.android.build.gradle.LibraryPlugin
-import com.yy.plugin.method.CheckMethodUsedExtension
-import com.yy.plugin.method.NoUsedMethodTransform
+import com.yy.plugin.extension.CheckMethodUsedExtension
+import com.yy.plugin.transform.NoUsedMethodTransform
 import com.yy.plugin.utils.Logger
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -22,7 +22,7 @@ public class UselessPlugin implements Plugin<Project> {
             throw new IllegalStateException("'android' or 'android-library' plugin required.")
         }
 
-        project.extensions.create('uselessPluginExtension', UselessPluginExension)
+        project.extensions.create('uselessPluginExtension', com.yy.plugin.extension.UselessPluginExension)
         project.extensions.create('checkMethodUsedExtension', CheckMethodUsedExtension)
 
         AssembleTask assembleTask = getTaskInfo(project.gradle.startParameter.taskNames, project);
@@ -31,11 +31,11 @@ public class UselessPlugin implements Plugin<Project> {
             def android = project.extensions.findByType(AppExtension)
             //根据开关来判断是否检查无用类
             boolean checkNotUsedMethod = Boolean.parseBoolean(project.properties.get("checkMethodNotUsed"))
-            println("checkNotUsedMethod = " + checkNotUsedMethod)
+            Logger.i("checkNotUsedMethod = " + checkNotUsedMethod)
             if (checkNotUsedMethod) {
                 android.registerTransform(new NoUsedMethodTransform(project, project.checkMethodUsedExtension))
             }
-            android.registerTransform(new Transform(project, project.uselessPluginExtension))
+            android.registerTransform(new com.yy.plugin.transform.UselessTransform(project, project.uselessPluginExtension))
         }
     }
 

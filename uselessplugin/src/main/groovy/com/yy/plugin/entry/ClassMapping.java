@@ -1,4 +1,4 @@
-package com.yy.plugin.method;
+package com.yy.plugin.entry;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,14 +1,19 @@
-package com.yy.plugin
+package com.yy.plugin.transform
 
 import com.android.build.api.transform.*
 import com.android.build.gradle.internal.pipeline.TransformManager
+import com.yy.plugin.utils.AutoInject
+import com.yy.plugin.utils.Logger
 import org.apache.commons.codec.digest.DigestUtils
 import org.apache.commons.io.FileUtils
 import org.gradle.api.Project
 
 import java.util.jar.JarFile
 
-public class Transform extends com.android.build.api.transform.Transform {
+/**
+ *
+ */
+public class UselessTransform extends com.android.build.api.transform.Transform {
 
     Project project
     AutoInject mAutoInject;
@@ -16,36 +21,36 @@ public class Transform extends com.android.build.api.transform.Transform {
     private int mInterfaceClassCount;
     private int mEmptyMethodCount;
     private int mExceptionMethodCount;
-    private UselessPluginExension mUnusedPluginExension;
+    private com.yy.plugin.extension.UselessPluginExension mUnusedPluginExension;
 
     @Override
     String getName() {
         return "UselessTransform"
     }
 
-    public Transform(Project project, UselessPluginExension pluginExension) {
+    public UselessTransform(Project project, com.yy.plugin.extension.UselessPluginExension pluginExension) {
         this.project = project
         mUnusedPluginExension = pluginExension;
     }
 
     @Override
-    Set<QualifiedContent.Scope> getScopes() {
+    Set<QualifiedContent.Scope> getScopes() {//指明Transform的作用域
         return TransformManager.SCOPE_FULL_PROJECT
     }
 
     @Override
-    Set<QualifiedContent.ContentType> getInputTypes() {
+    Set<QualifiedContent.ContentType> getInputTypes() {//指明Transform的输入类型
         return TransformManager.CONTENT_CLASS
     }
 
     @Override
-    boolean isIncremental() {
+    boolean isIncremental() {//用于指明是否是增量构建
         return false
     }
 
     @Override
     void transform(Context context, Collection<TransformInput> inputs, Collection<TransformInput> referencedInputs, TransformOutputProvider outputProvider, boolean isIncremental) throws IOException, TransformException, InterruptedException {
-        println 'transform begin >>>.'
+        Logger.i('useless transform begin ——>')
         mAutoInject = new AutoInject(mUnusedPluginExension);
 
         initInjectClassPath();
@@ -63,8 +68,8 @@ public class Transform extends com.android.build.api.transform.Transform {
                     mEmptyMethodCount += injectResult[2];
                     mExceptionMethodCount += injectResult[3];
                     // 获取output目录
-                    println("inputDir = " + directoryInput.file.absolutePath);
-                    println("dest = " + dest)
+                    Logger.i("inputDir = " + directoryInput.file.absolutePath);
+                    Logger.i("dest = " + dest)
                 }
                 // 将input的目录复制到output指定目录
                 FileUtils.copyDirectory(directoryInput.file, dest)
@@ -84,8 +89,8 @@ public class Transform extends com.android.build.api.transform.Transform {
                 if (mUnusedPluginExension.injectEnable) {
                     injectJarLibs(jarInput.file);
                     def srcJarFile = new JarFile(jarInput.file);
-                    println("inputDir = " + jarInput.file.getAbsolutePath());
-                    println("dest = " + dest)
+                    Logger.i("inputDir = " + jarInput.file.getAbsolutePath());
+                    Logger.i("dest = " + dest)
                     int[] injectResult = mAutoInject.injectJar(srcJarFile, dest);
                     mInjectCount += injectResult[0];
                     mInterfaceClassCount += injectResult[1];

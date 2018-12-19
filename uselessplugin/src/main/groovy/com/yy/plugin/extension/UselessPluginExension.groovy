@@ -1,4 +1,4 @@
-package com.yy.plugin
+package com.yy.plugin.extension
 
 class UselessPluginExension {
     def injectEnable = true

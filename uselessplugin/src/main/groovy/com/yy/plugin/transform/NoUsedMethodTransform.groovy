@@ -1,14 +1,16 @@
-package com.yy.plugin.method
+package com.yy.plugin.transform
 
 import com.android.build.api.transform.*
 import com.android.build.gradle.internal.pipeline.TransformManager
+import com.yy.plugin.extension.CheckMethodUsedExtension
 import com.yy.plugin.utils.Logger
+import com.yy.plugin.utils.MethodUsedCheckHelper
 import org.gradle.api.Project
 
 public class NoUsedMethodTransform extends com.android.build.api.transform.Transform {
 
     Project project
-    MethodUsedCheck mMethodUsedCheck;
+    MethodUsedCheckHelper mMethodUsedCheck;
     private int mNotUsedClassCount;
     private int mNotUsedMethodCount;
     private CheckMethodUsedExtension mCheckMethodUsedExension;
@@ -40,8 +42,8 @@ public class NoUsedMethodTransform extends com.android.build.api.transform.Trans
 
     @Override
     void transform(Context context, Collection<TransformInput> inputs, Collection<TransformInput> referencedInputs, TransformOutputProvider outputProvider, boolean isIncremental) throws IOException, TransformException, InterruptedException {
-       Logger.i('noUsedMethod transform begin >>>.')
-        mMethodUsedCheck = new MethodUsedCheck(mCheckMethodUsedExension, project);
+        Logger.i('noUsedMethod transform begin >>>.')
+        mMethodUsedCheck = new MethodUsedCheckHelper(mCheckMethodUsedExension, project);
         initInjectClassPath();
         //遍历所有的class的所属文件夹，是查找的入口
         inputs.each { TransformInput input ->
@@ -63,24 +65,24 @@ public class NoUsedMethodTransform extends com.android.build.api.transform.Trans
      *
      * <br>不同app不一样。
      */
-    private void initInjectClassPath () {
+    private void initInjectClassPath() {
         project.android.bootClasspath.each {
             mMethodUsedCheck.addClassPath((String) it.absolutePath);
         }
 
-        //加入res modules下的依赖jar包
-        File dir = project.file("../res/noexportlibs")
-        if (dir != null && dir.isDirectory()) {
-            dir.eachFileRecurse { File file ->
-                String filePath = file.absolutePath;
-                if (filePath.endsWith(".jar")) {
-                    mMethodUsedCheck.addClassPath(filePath);
-                }
-            }
-        }
+//        //加入res modules下的依赖jar包
+//        File dir = project.file("../res/noexportlibs")
+//        if (dir != null && dir.isDirectory()) {
+//            dir.eachFileRecurse { File file ->
+//                String filePath = file.absolutePath;
+//                if (filePath.endsWith(".jar")) {
+//                    mMethodUsedCheck.addClassPath(filePath);
+//                }
+//            }
+//        }
 
         //加入本工程下的依赖jar包
-        File localDir = project.file("exlibs");
+        File localDir = project.file("libs");
         if (localDir != null && localDir.isDirectory()) {
             localDir.eachFileRecurse { File file ->
                 String filePath = file.absolutePath;

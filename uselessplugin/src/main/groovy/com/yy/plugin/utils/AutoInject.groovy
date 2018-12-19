@@ -1,4 +1,4 @@
-package com.yy.plugin
+package com.yy.plugin.utils
 
 import com.android.SdkConstants
 import com.yy.plugin.utils.Logger
@@ -19,35 +19,35 @@ public class AutoInject {
     private List<String> mDisinjectClassSuffix;
     private String mLogTag;
 
-    public AutoInject(UselessPluginExension pluginExension) {
+    public AutoInject(com.yy.plugin.extension.UselessPluginExension pluginExension) {
         pool = new ClassPool();
         initInjectPackages(pluginExension);
         initLogTag(pluginExension);
         initDisinjectClasses(pluginExension);
     }
 
-    private void initInjectPackages(UselessPluginExension pluginExension) {
+    private void initInjectPackages(com.yy.plugin.extension.UselessPluginExension pluginExension) {
         mInjectPackageKyes = pluginExension.injectPackagesKey;
     }
 
-    private void initLogTag(UselessPluginExension pluginExension) {
+    private void initLogTag(com.yy.plugin.extension.UselessPluginExension pluginExension) {
         mLogTag = pluginExension.getLogTag();
         if (mLogTag == null || mLogTag.trim().length() == 0) {
             mLogTag = "UnusedLog";
         }
     }
 
-    private void initDisinjectClasses(UselessPluginExension pluginExension) {
+    private void initDisinjectClasses(com.yy.plugin.extension.UselessPluginExension pluginExension) {
         mDisinjectClassSuffix = pluginExension.disinjectClassSuffix;
     }
 
     public void addClassPath(String path) {
-        println('add classPath:' + path)
+        Logger.i('add classPath:' + path)
         pool.appendClassPath(path);
     }
 
     public void insertClassPath(String path) {
-        println('insert classPath:' + path)
+        Logger.i('insert classPath:' + path)
         pool.insertClassPath(path)
     }
 
@@ -58,7 +58,7 @@ public class AutoInject {
         sb.append("String threadName = java.lang.Thread.currentThread().getName();");
         sb.append("android.util.Log.e(\"" + mLogTag + "\", \"ThreadName[\" + threadName + \"] \" + ");
         sb.append("\"enter method[" + className + "." + methodName + "]\");");
-        println("insertcode is: " + sb.toString());
+        Logger.i("insertcode is: " + sb.toString());
         return sb.toString();
     }
 

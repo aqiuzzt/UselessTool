@@ -1,7 +1,7 @@
-package com.yy.plugin.method
+package com.yy.plugin.utils
 
 import com.android.SdkConstants
-import com.yy.plugin.utils.Logger
+import com.yy.plugin.extension.CheckMethodUsedExtension
 import javassist.ClassPool
 import javassist.CtBehavior
 import javassist.CtClass
@@ -11,14 +11,17 @@ import org.gradle.api.Project
 
 import java.util.regex.Matcher
 
-public class MethodUsedCheck {
+/**
+ * 检测方法类
+ */
+public class MethodUsedCheckHelper {
     Project project
     private ClassPool pool
     private List<String> mCheckPackageKyes = new ArrayList<>();
-    ReadMapping mReadMapping;
+    ReadMappingHelper mReadMapping;
     private String mResultFile;
 
-    public MethodUsedCheck(CheckMethodUsedExtension pluginExension, Project project) {
+    public MethodUsedCheckHelper(CheckMethodUsedExtension pluginExension, Project project) {
         pool = new ClassPool();
         this.project = project;
         initCheckPackages(pluginExension);
@@ -29,8 +32,8 @@ public class MethodUsedCheck {
         if (mResultFile == null || mResultFile.length() == 0) {
             mResultFile = project.rootDir.getAbsolutePath() + "/NoUsedResult.txt";
         }
-        FileUtil.deleteFile(mResultFile);
-        mReadMapping = ReadMapping.getInstance();
+        com.yy.plugin.utils.FileUtil.deleteFile(mResultFile);
+        mReadMapping = ReadMappingHelper.getInstance();
         mReadMapping.initMappingInfo(pluginExension.getMappingFilePath());
     }
 
@@ -63,10 +66,10 @@ public class MethodUsedCheck {
                     if (!isQualifiedClass(c)) {
                         return;
                     }
-                    if (ReadMapping.getInstance().classHasNoUsed(className)) {
+                    if (ReadMappingHelper.getInstance().classHasNoUsed(className)) {
                         Logger.i("No used className = " + className)
                         resultCount[0]++;
-                        FileUtil.writeFile(mResultFile, "ClassNotUsed:" + className + "\r\n")
+                        com.yy.plugin.utils.FileUtil.writeFile(mResultFile, "ClassNotUsed:" + className + "\r\n")
                         return;
                     }
                     //CtMethod类型的数组methods
@@ -78,9 +81,9 @@ public class MethodUsedCheck {
                         }
                         methodName = getJavaMethodSignureWithReturnType(m)
                         //Logger.i("method " + className + "." + methodName)
-                        if (ReadMapping.getInstance().methodHasNoUsed(className, methodName)) {
+                        if (ReadMappingHelper.getInstance().methodHasNoUsed(className, methodName)) {
                             Logger.i("No used method " + className + "." + methodName)
-                            FileUtil.writeFile(mResultFile, "MethodNotUsed:" + className + "[" + methodName + "]\r\n")
+                            com.yy.plugin.utils.FileUtil.writeFile(mResultFile, "MethodNotUsed:" + className + "[" + methodName + "]\r\n")
                             resultCount[1]++;
                             continue;
                         }
@@ -141,7 +144,7 @@ public class MethodUsedCheck {
     }
 
     public void saveTotalCount(int classNotUsedCount, int methodNotUsedCount) {
-        FileUtil.writeFile(mResultFile, "NotUsedClassCount:" + classNotUsedCount +
+        com.yy.plugin.utils.FileUtil.writeFile(mResultFile, "NotUsedClassCount:" + classNotUsedCount +
                 "   mNotUsedMethodCount:" + methodNotUsedCount + "\r\n")
     }
 }

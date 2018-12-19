@@ -3,7 +3,6 @@ package com.yy.plugin.utils;
 import org.gradle.api.Project
 
 
-
 class Logger {
     static org.gradle.api.logging.Logger logger
 

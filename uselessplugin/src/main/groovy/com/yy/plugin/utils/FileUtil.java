@@ -1,4 +1,4 @@
-package com.yy.plugin.method;
+package com.yy.plugin.utils;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -12,6 +12,7 @@ public class FileUtil {
             file.delete();
         }
     }
+
     public static void writeFile(String filePath, String content) {
         FileWriter fw = null;
         try {
