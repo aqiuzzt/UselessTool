@@ -5,6 +5,7 @@ import com.android.build.gradle.AppPlugin
 import com.android.build.gradle.LibraryPlugin
 import com.yy.plugin.method.CheckMethodUsedExtension
 import com.yy.plugin.method.NoUsedMethodTransform
+import com.yy.plugin.utils.Logger
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.Task
@@ -13,6 +14,8 @@ public class UselessPlugin implements Plugin<Project> {
 
     @Override
     void apply(Project project) {
+        Logger.make(project)
+        Logger.i("UselessPlugin apply project = ${project.getName()}")
         def hasApp = project.plugins.withType(AppPlugin)
         def hasLib = project.plugins.withType(LibraryPlugin)
         if (!hasApp && !hasLib) {
@@ -51,7 +54,7 @@ public class UselessPlugin implements Plugin<Project> {
         }
         for (Task task : project.tasks) {
             if ("preBuild" == task.name || ('prepareReleaseDependencies' == task.name)) {
-                println("zack--UselessPlugin get preBuild")
+                Logger.i("UselessPlugin get preBuild")
                 assembleTask.isSamllBuild = true
                 break
             }

@@ -13,7 +13,8 @@ class Logger {
 
     static void i(String info) {
         if (null != info && null != logger) {
-            logger.info("YYUseless >>> " + info)
+//            println("YYUseless >>> " + info)
+            logger.quiet("YYUseless >>> " + info)
         }
     }
 
