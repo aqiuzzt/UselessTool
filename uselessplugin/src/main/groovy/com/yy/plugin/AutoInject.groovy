@@ -1,6 +1,7 @@
 package com.yy.plugin
 
 import com.android.SdkConstants
+import com.yy.plugin.utils.Logger
 import javassist.*
 import javassist.bytecode.AccessFlag
 
@@ -90,14 +91,14 @@ public class AutoInject {
                             injectCount[2]++;
                             continue;
                         }
-  //                      try {
- //                           println("dir methodName = " + m.name)
-                            m.insertBefore(getInjectContent(c, m));
-                            injectCount[0]++;
-         /*               } catch (CannotCompileException e) {
-                            injectCount[3]++;
-                            continue;
-                        }*/
+                        //                      try {
+                        //                           println("dir methodName = " + m.name)
+                        m.insertBefore(getInjectContent(c, m));
+                        injectCount[0]++;
+                        /*               } catch (CannotCompileException e) {
+                                           injectCount[3]++;
+                                           continue;
+                                       }*/
                     }
                     c.writeFile(path)
                     c.detach()
@@ -110,10 +111,10 @@ public class AutoInject {
     public int[] injectJar(JarFile srcJarFile, File desJarFile) {
         int[] injectCount = new int[4];
         Enumeration<JarEntry> classes = srcJarFile.entries();
-        if(!desJarFile.getParentFile().exists()){
+        if (!desJarFile.getParentFile().exists()) {
             desJarFile.getParentFile().mkdirs();
         }
-        if(desJarFile.exists()){
+        if (desJarFile.exists()) {
             desJarFile.delete();
         }
         ZipOutputStream outStream = new JarOutputStream(new FileOutputStream(desJarFile));
@@ -140,10 +141,10 @@ public class AutoInject {
                             injectCount[2]++;
                             continue;
                         }
-                       // println 'method1 name ' + m.getName();
-                       // try {
-                            m.insertBefore(getInjectContent(ctClass, m));
-                            injectCount[0]++;
+                        // println 'method1 name ' + m.getName();
+                        // try {
+                        m.insertBefore(getInjectContent(ctClass, m));
+                        injectCount[0]++;
 //                        } catch (CannotCompileException e) {
 //                            injectCount[3]++;
 //                            continue;
@@ -151,7 +152,7 @@ public class AutoInject {
                     }
                     zipFile(ctClass.toBytecode(), outStream, ctClass.getName().replaceAll("\\.", "/") + ".class");
                 } catch (javassist.NotFoundException e) {
-                    println "injectJar class not found exception class name: " + className
+                    Logger.i("injectJar class not found exception class name: " + className + " ex:" + e.printStackTrace())
                 }
             }
         }
@@ -211,7 +212,8 @@ public class AutoInject {
         }
         return true;
     }
-    private  void zipFile(byte[] classBytesArray, ZipOutputStream zos, String entryName) {
+
+    private void zipFile(byte[] classBytesArray, ZipOutputStream zos, String entryName) {
         try {
             ZipEntry entry = new ZipEntry(entryName);
             zos.putNextEntry(entry);

@@ -106,7 +106,7 @@ public class MethodUsedCheck {
             }
             return true;
         } catch (javassist.NotFoundException e) {
-            Logger.i("isQualifiedClass class not found exception class name: " + className)
+            Logger.i("isQualifiedClass class not found exception：" + e.printStackTrace())
             return false;
         }
     }
@@ -135,7 +135,7 @@ public class MethodUsedCheck {
             methodSignure.append(")")
             return methodSignure.toString();
         } catch (javassist.NotFoundException e) {
-            Logger.i("getJavaMethodSignureWithReturnType class not found exception class name: " + className)
+            Logger.i("getJavaMethodSignureWithReturnType class not found exception:" + e.printStackTrace())
             return "";
         }
     }
