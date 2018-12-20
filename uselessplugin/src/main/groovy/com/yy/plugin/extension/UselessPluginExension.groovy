@@ -6,7 +6,7 @@ class UselessPluginExension {
     List<String> disinjectClassSuffix = new ArrayList<String>()
     String logTag = "YYUseless"
 
-    public UselessPluginExension injectPackagesKey(String...filters) {
+    public UselessPluginExension injectPackagesKey(String... filters) {
         if (filters != null) {
             injectPackagesKey.addAll(filters)
         }
@@ -21,7 +21,7 @@ class UselessPluginExension {
         return logTag;
     }
 
-    public UselessPluginExension disinjectClassSuffix(String...filters) {
+    public UselessPluginExension disinjectClassSuffix(String... filters) {
         if (filters != null) {
             disinjectClassSuffix.addAll(filters)
         }

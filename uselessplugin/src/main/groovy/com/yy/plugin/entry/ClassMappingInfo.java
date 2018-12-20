@@ -8,7 +8,7 @@ import java.util.Map;
  * method 存储的信息有：返回值，方法名，参数列表，混淆后的名字
  * 字段 存储的信息有：字段名，混淆后的名字
  */
-public class ClassMapping {
+public class ClassMappingInfo {
     /**
      * 混淆前的类全路径
      */
@@ -49,9 +49,9 @@ public class ClassMapping {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof ClassMapping)) return false;
+        if (!(o instanceof ClassMappingInfo)) return false;
 
-        ClassMapping classMapping = (ClassMapping) o;
+        ClassMappingInfo classMapping = (ClassMappingInfo) o;
 
         return getClassName() != null ? getClassName().equals(classMapping.getClassName()) : classMapping.getClassName() == null;
 

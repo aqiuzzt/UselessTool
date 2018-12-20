@@ -10,9 +10,7 @@ import org.gradle.api.Project
 
 import java.util.jar.JarFile
 
-/**
- *
- */
+
 public class UselessTransform extends com.android.build.api.transform.Transform {
 
     Project project

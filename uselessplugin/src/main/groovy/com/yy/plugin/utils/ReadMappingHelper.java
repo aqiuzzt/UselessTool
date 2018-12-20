@@ -1,6 +1,6 @@
 package com.yy.plugin.utils;
 
-import com.yy.plugin.entry.ClassMapping;
+import com.yy.plugin.entry.ClassMappingInfo;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *
  * mapping文件解析类
  */
 
@@ -21,7 +20,7 @@ public class ReadMappingHelper {
     /**
      * 所有创建的classMapping
      */
-    private Map<String, ClassMapping> usedInModifiedClassMappingInfo = new HashMap<String, ClassMapping>();
+    private Map<String, ClassMappingInfo> usedInModifiedClassMappingInfo = new HashMap<String, ClassMappingInfo>();
 
     public static ReadMappingHelper getInstance() {
         if (instance == null) {
@@ -69,14 +68,17 @@ public class ReadMappingHelper {
                 needBacktrace = false;
                 //通过->和:来判断该行是否为类信息行
                 if (line.indexOf("->") > 0 && line.indexOf(":") == line.length() - 1) {
-                    ClassMapping classMapping = new ClassMapping();
+                    ClassMappingInfo classMapping = new ClassMappingInfo();
                     className = line.substring(0, line.indexOf("->") - 1).trim();
 //                    Logger.i("className:" + className);
                     classMapping.setClassName(className);
+
+                    //com.abstractclass.AbstractClass -> com.a.a:
                     //然后按->进行split，拿到前面原始的类名路径，放到新创建的classMapping中
                     classMapping.setValueName(line.split("->")[1].substring(0, line.split("->")[1].length() - 1).trim());
                     line = reader.readLine();
                     while (line != null) {
+                        //void doHandler() -> a
                         line = line.trim();
                         if (line.endsWith(":")) {
                             needBacktrace = true;
@@ -86,9 +88,9 @@ public class ReadMappingHelper {
                         if (lineinfo.length != 4) {
                             throw new RuntimeException("mapping line info is error  " + line);
                         }
-                        if (lineinfo[1].contains("(") && lineinfo[1].contains(")")) {
+                        if (lineinfo[1].contains("(") && lineinfo[1].contains(")")) {//判断是否是方法
                             String strMethod = lineinfo[0].trim();
-                            //微博混淆后的map文件中，方法都会在前面加上数字，格式类似于10:10:void function() -> a
+                            //混淆后的map文件中，方法都会在前面加上数字，格式类似于10:10:void function() -> a
                             if (strMethod.contains(":")) {
                                 strMethod = strMethod.substring(strMethod.lastIndexOf(":"));
                             }
@@ -127,19 +129,20 @@ public class ReadMappingHelper {
 
     /**
      * null 表示类无用
+     *
      * @param classname
      * @return
      */
-    public ClassMapping getClassMapping(String classname) {
+    public ClassMappingInfo getClassMapping(String classname) {
         return usedInModifiedClassMappingInfo.get(classname);
     }
 
-    public void setClassMapping(String classname, ClassMapping classMapping) {
+    public void setClassMapping(String classname, ClassMappingInfo classMapping) {
         usedInModifiedClassMappingInfo.put(classname, classMapping);
     }
 
-    public ClassMapping getClassMappingOrDefault(String classname) {
-        ClassMapping defaultClassMapping = new ClassMapping();
+    public ClassMappingInfo getClassMappingOrDefault(String classname) {
+        ClassMappingInfo defaultClassMapping = new ClassMappingInfo();
         return usedInModifiedClassMappingInfo.getOrDefault(classname, defaultClassMapping);
     }
 
@@ -160,7 +163,7 @@ public class ReadMappingHelper {
     }
 
     public boolean classHasNoUsed(String className) {
-        ClassMapping classMapping = getClassMapping(className);
+        ClassMappingInfo classMapping = getClassMapping(className);
         if (classMapping == null) {
             return true;
         }
@@ -168,7 +171,7 @@ public class ReadMappingHelper {
     }
 
     public boolean methodHasNoUsed(String className, String methodName) {
-        ClassMapping classMapping = getClassMapping(className);
+        ClassMappingInfo classMapping = getClassMapping(className);
         if (classMapping == null) {
             return true;
         }
