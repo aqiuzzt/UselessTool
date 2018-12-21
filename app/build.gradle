@@ -9,7 +9,7 @@ uselessPluginExtension {
 }
 
 checkMethodUsedExtension {
-    mappingFilePath = project.buildDir.getAbsolutePath() + "/outputs/mapping/release/mapping1.txt"
+    mappingFilePath = project.buildDir.getAbsolutePath() + "/outputs/mapping/release/mapping.txt"
     outFilePath = rootProject.rootDir.getAbsolutePath() + "/NotUsedMethod.txt"
 }
 

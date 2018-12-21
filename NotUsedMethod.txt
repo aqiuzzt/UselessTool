@@ -1,8 +1,9 @@
 MethodNotUsed:com.example.zack.plugintest.MainActivity[void onNoUseInterface()]
+MethodNotUsed:com.example.zack.plugintest.MainActivity[void callTestLibFunction222222(java.lang.String)]
 MethodNotUsed:com.abstractclass.TestBean[int getB()]
 MethodNotUsed:com.abstractclass.AbstractClass[void doNoUseHandler()]
 MethodNotUsed:com.abstractclass.AbstractClass[void doAbstractHandler()]
 MethodNotUsed:com.abstractclass.ITestInterface[void onNoUseInterface()]
 MethodNotUsed:com.abstractclass.TestUtil[void doNoUseTest()]
 ClassNotUsed:com.abstractclass.TestCdd
-NotUsedClassCount:1   mNotUsedMethodCount:6
+NotUsedClassCount:1   mNotUsedMethodCount:7

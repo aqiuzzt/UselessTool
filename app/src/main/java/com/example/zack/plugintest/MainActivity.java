@@ -12,7 +12,7 @@ import com.abstractclass.RealClass;
 import com.test.lib.MyTestLib;
 import com.test.lib.MyTestLibUtil;
 
-public class MainActivity extends Activity implements ITestInterface{
+public class MainActivity extends Activity implements ITestInterface {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +25,7 @@ public class MainActivity extends Activity implements ITestInterface{
         test1.doSelfHandler();
         doHandleProjectOne();
         callTestLibFunction();
+        callTestLibFunction("");
     }
 
     @Override
@@ -41,8 +42,8 @@ public class MainActivity extends Activity implements ITestInterface{
         findViewById(R.id.btProjectOne).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Uri uri=Uri.parse("plugintest://projectone");
-                Intent intent=new Intent(Intent.ACTION_VIEW,uri);
+                Uri uri = Uri.parse("plugintest://projectone");
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 try {
                     MainActivity.this.startActivity(intent);
                 } catch (Exception e) {
@@ -59,5 +60,22 @@ public class MainActivity extends Activity implements ITestInterface{
         myTestLib.doTestLib();
         MyTestLibUtil myTestLibUtil = new MyTestLibUtil();
         myTestLibUtil.doTestLibUtil();
+    }
+
+    private void callTestLibFunction(String str) {
+        MyTestLib myTestLib = new MyTestLib();
+        myTestLib.doTestLib();
+        MyTestLibUtil myTestLibUtil = new MyTestLibUtil();
+        myTestLibUtil.doTestLibUtil();
+        Log.i("dddd", str);
+    }
+
+
+    private void callTestLibFunction222222(String str) {
+        MyTestLib myTestLib = new MyTestLib();
+        myTestLib.doTestLib();
+        MyTestLibUtil myTestLibUtil = new MyTestLibUtil();
+        myTestLibUtil.doTestLibUtil();
+        Log.i("dddd", str);
     }
 }
