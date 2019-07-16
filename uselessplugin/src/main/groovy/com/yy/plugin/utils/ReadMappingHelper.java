@@ -115,7 +115,8 @@ public class ReadMappingHelper {
             Logger.i("method total count = " + methodCount);
         } catch (IOException ioe) {
             ioe.printStackTrace();
-            throw new RuntimeException("get Mapping info Failed");
+            Logger.i("get Mapping info Failed");
+//            throw new RuntimeException("get Mapping info Failed");
         } finally {
             try {
                 if (is != null) {
